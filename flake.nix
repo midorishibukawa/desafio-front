@@ -16,12 +16,20 @@
           pkgs = import nixpkgs {inherit system;};
         });
   in {
-    devShells = forEachSupportedSystem ({pkgs}: {
+      devShells = forEachSupportedSystem ({pkgs}: {
       default = pkgs.mkShell {
         packages = with pkgs; [
-          bun
-        ];
+            chromium
+            yarn
+            yarn2nix
+        ] ++ (with pkgs.nodePackages; [
+            typescript-language-server
+        ]);
       };
+
+      shellHook = ''
+        export CHROME_BIN="which chromium"
+      '';
     });
   };
 }
